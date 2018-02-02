@@ -4,10 +4,8 @@ Command Line Tool for AWS Athena (bq command like)
 
 ## Installation
 
-Install by gem:
-
 ```bash
-$ gem install aq
+$ go get github.com/mia-0032/aq
 ```
 
 ## Usage
