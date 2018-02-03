@@ -46,6 +46,22 @@ var Commands = []cli.Command{
 			return nil
 		},
 	},
+	{
+		Name:   "ls",
+		Usage:  "Show databases or tables in specified database",
+		Action: cmd.Ls,
+		ArgsUsage:   "[DATABASE]",
+		Flags: []cli.Flag{
+			BucketFlag,
+			ObjectPrefixFlag,
+		},
+		Before: func(c *cli.Context) error {
+			if c.String("bucket") == "" {
+				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			return nil
+		},
+	},
 }
 
 func Run() int {

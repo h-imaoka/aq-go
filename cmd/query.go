@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 	"strings"
+	"os"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/sirupsen/logrus"
@@ -15,14 +16,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/aws/aws-sdk-go/aws"
-
-	"os"
 )
 
 func Query(c *cli.Context) error {
 	query := c.Args().First()
 
-	aqr := newAthenaQueryRunner()
+	aqr := NewAthenaQueryRunner()
 	err := aqr.run(query, c.String("bucket"), c.String("object_prefix"), c.Int("timeout"))
 	if err != nil {
 		logrus.New().Error(err)
@@ -39,7 +38,7 @@ type AthenaQueryRunner struct {
 	s3Downloader *s3manager.Downloader
 }
 
-func newAthenaQueryRunner() *AthenaQueryRunner {
+func NewAthenaQueryRunner() *AthenaQueryRunner {
 	a := new(AthenaQueryRunner)
 	a.logger = logrus.New()
 
@@ -179,4 +178,21 @@ func (a AthenaQueryRunner) run(query string, bucket string, objectPrefix string,
 	a.printResult(result, format)
 
 	return nil
+}
+
+type AthenaQueryBuilder struct {}
+
+func NewAthenaQueryBuilder() *AthenaQueryBuilder {
+	a := new(AthenaQueryBuilder)
+	return a
+}
+
+func (a AthenaQueryBuilder) ls(database string) string {
+	var query string
+	if database == "" {
+		query = "SHOW DATABASES"
+	} else {
+		query = "SHOW TABLES IN " + database
+	}
+	return query
 }
