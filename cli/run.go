@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/mia-0032/aq/cmd"
@@ -58,6 +59,33 @@ var Commands = []cli.Command{
 		Before: func(c *cli.Context) error {
 			if c.String("bucket") == "" {
 				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			return nil
+		},
+	},
+	{
+		Name:   "head",
+		Usage:  "Show records in specified table",
+		Action: cmd.Head,
+		ArgsUsage:   "[DATABASE].[TABLE]",
+		Flags: []cli.Flag{
+			BucketFlag,
+			ObjectPrefixFlag,
+			cli.IntFlag{
+				Name: "max_rows, n",
+				Value: 100,
+				Usage: "This number of rows are printed.",
+			},
+		},
+		Before: func(c *cli.Context) error {
+			if c.String("bucket") == "" {
+				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			if c.NArg() == 0 {
+				return cli.NewExitError("DATABASE and TABLE must be specified.", 1)
+			}
+			if len(strings.Split(c.Args().First(), ".")) != 2 {
+				return cli.NewExitError("[DATABASE].[TABLE] must contain `.`.", 1)
 			}
 			return nil
 		},

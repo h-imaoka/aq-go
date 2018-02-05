@@ -196,3 +196,8 @@ func (a AthenaQueryBuilder) ls(database string) string {
 	}
 	return query
 }
+
+func (a AthenaQueryBuilder) head(table string, maxRows int) string {
+	query := "SELECT * FROM " + table + " LIMIT " + fmt.Sprint(maxRows)
+	return query
+}
