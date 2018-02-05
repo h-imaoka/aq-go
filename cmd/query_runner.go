@@ -10,27 +10,12 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/athena"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/aws/aws-sdk-go/aws"
 )
-
-func Query(c *cli.Context) error {
-	query := c.Args().First()
-
-	aqr := NewAthenaQueryRunner()
-	err := aqr.run(query, c.String("bucket"), c.String("object_prefix"), c.Int("timeout"))
-	if err != nil {
-		logrus.New().Error(err)
-		return cli.NewExitError("Query execution is failed.", 1)
-	}
-
-	return nil
-}
-
 
 type AthenaQueryRunner struct {
 	logger *logrus.Logger
@@ -178,41 +163,4 @@ func (a AthenaQueryRunner) run(query string, bucket string, objectPrefix string,
 	a.printResult(result, format)
 
 	return nil
-}
-
-type AthenaQueryBuilder struct {}
-
-func NewAthenaQueryBuilder() *AthenaQueryBuilder {
-	a := new(AthenaQueryBuilder)
-	return a
-}
-
-func (a AthenaQueryBuilder) ls(database string) string {
-	var query string
-	if database == "" {
-		query = "SHOW DATABASES"
-	} else {
-		query = "SHOW TABLES IN " + database
-	}
-	return query
-}
-
-func (a AthenaQueryBuilder) head(table string, maxRows int) string {
-	query := "SELECT * FROM " + table + " LIMIT " + fmt.Sprint(maxRows)
-	return query
-}
-
-func (a AthenaQueryBuilder) mk(database string) string {
-	query := "CREATE DATABASE IF NOT EXISTS " + database
-	return query
-}
-
-func (a AthenaQueryBuilder) rm(database string, table string) string {
-	var query string
-	if table == "" {
-		query = "DROP DATABASE IF EXISTS " + database
-	} else {
-		query = "DROP TABLE IF EXISTS " + database + "." + table
-	}
-	return query
 }
