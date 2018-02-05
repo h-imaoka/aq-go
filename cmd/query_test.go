@@ -18,4 +18,9 @@ func TestAthenaQueryBuilder(t *testing.T) {
 	if a.head("test.table", 10) != "SELECT * FROM test.table LIMIT 10" {
 		t.Fail()
 	}
+
+	t.Log("test mk")
+	if a.mk("test_db") != "CREATE DATABASE IF NOT EXISTS test_db" {
+		t.Fail()
+	}
 }

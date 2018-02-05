@@ -67,7 +67,7 @@ var Commands = []cli.Command{
 		Name:   "head",
 		Usage:  "Show records in specified table",
 		Action: cmd.Head,
-		ArgsUsage:   "[DATABASE].[TABLE]",
+		ArgsUsage:   "DATABASE.TABLE",
 		Flags: []cli.Flag{
 			BucketFlag,
 			ObjectPrefixFlag,
@@ -86,6 +86,28 @@ var Commands = []cli.Command{
 			}
 			if len(strings.Split(c.Args().First(), ".")) != 2 {
 				return cli.NewExitError("[DATABASE].[TABLE] must contain `.`.", 1)
+			}
+			return nil
+		},
+	},
+	{
+		Name:   "mk",
+		Usage:  "Create database",
+		Action: cmd.Mk,
+		ArgsUsage:   "DATABASE",
+		Flags: []cli.Flag{
+			BucketFlag,
+			ObjectPrefixFlag,
+		},
+		Before: func(c *cli.Context) error {
+			if c.String("bucket") == "" {
+				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			if c.NArg() == 0 {
+				return cli.NewExitError("DATABASE must be specified.", 1)
+			}
+			if len(strings.Split(c.Args().First(), ".")) >= 2 {
+				return cli.NewExitError("If you want to create table, use `load` subcommand.", 1)
 			}
 			return nil
 		},

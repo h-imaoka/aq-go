@@ -201,3 +201,8 @@ func (a AthenaQueryBuilder) head(table string, maxRows int) string {
 	query := "SELECT * FROM " + table + " LIMIT " + fmt.Sprint(maxRows)
 	return query
 }
+
+func (a AthenaQueryBuilder) mk(database string) string {
+	query := "CREATE DATABASE IF NOT EXISTS " + database
+	return query
+}
