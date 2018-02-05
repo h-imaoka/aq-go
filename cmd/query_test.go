@@ -23,4 +23,12 @@ func TestAthenaQueryBuilder(t *testing.T) {
 	if a.mk("test_db") != "CREATE DATABASE IF NOT EXISTS test_db" {
 		t.Fail()
 	}
+
+	t.Log("test rm")
+	if a.rm("test_db", "") != "DROP DATABASE IF EXISTS test_db" {
+		t.Fail()
+	}
+	if a.rm("test_db", "test_table") != "DROP TABLE IF EXISTS test_db.test_table" {
+		t.Fail()
+	}
 }

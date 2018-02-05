@@ -206,3 +206,13 @@ func (a AthenaQueryBuilder) mk(database string) string {
 	query := "CREATE DATABASE IF NOT EXISTS " + database
 	return query
 }
+
+func (a AthenaQueryBuilder) rm(database string, table string) string {
+	var query string
+	if table == "" {
+		query = "DROP DATABASE IF EXISTS " + database
+	} else {
+		query = "DROP TABLE IF EXISTS " + database + "." + table
+	}
+	return query
+}

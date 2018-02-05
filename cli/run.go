@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/mia-0032/aq/cmd"
+	"github.com/Bowery/prompt"
 	"github.com/urfave/cli"
 )
 
@@ -109,6 +110,40 @@ var Commands = []cli.Command{
 			if len(strings.Split(c.Args().First(), ".")) >= 2 {
 				return cli.NewExitError("If you want to create table, use `load` subcommand.", 1)
 			}
+			return nil
+		},
+	},
+	{
+		Name:   "rm",
+		Usage:  "Drop database or table",
+		Action: cmd.Rm,
+		ArgsUsage:   "NAME",
+		Flags: []cli.Flag{
+			BucketFlag,
+			ObjectPrefixFlag,
+			cli.BoolFlag{
+				Name: "force, f",
+				Usage: "Skip confirmation if this is set.",
+			},
+		},
+		Before: func(c *cli.Context) error {
+			if c.String("bucket") == "" {
+				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			if c.NArg() == 0 {
+				return cli.NewExitError("NAME must be specified.", 1)
+			}
+
+			var answer bool
+			if c.Bool("force") {
+				answer = true
+			} else {
+				answer, _ = prompt.Ask("Would you remove " + c.Args().First())
+			}
+			if !answer {
+				return cli.NewExitError("Canceled.", 1)
+			}
+
 			return nil
 		},
 	},
