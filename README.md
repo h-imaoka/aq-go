@@ -78,4 +78,4 @@ todo: write
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/mia-0032/aq
+Bug reports and pull requests are welcome on GitHub at https://github.com/mia-0032/aq-go
