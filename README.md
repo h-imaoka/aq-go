@@ -5,7 +5,7 @@ Command Line Tool for AWS Athena (bq command like)
 ## Installation
 
 ```bash
-$ go get github.com/mia-0032/aq
+$ go get github.com/mia-0032/aq-go
 ```
 
 ## Usage

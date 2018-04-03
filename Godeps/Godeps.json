@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/mia-0032/aq",
+	"ImportPath": "github.com/mia-0032/aq-go",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
 	"Deps": [

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mia-0032/aq/cmd"
+	"github.com/mia-0032/aq-go/cmd"
 	"github.com/Bowery/prompt"
 	"github.com/urfave/cli"
 )
