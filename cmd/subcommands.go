@@ -82,6 +82,30 @@ func Rm(c *cli.Context) error {
 	return nil
 }
 
+func Load(c *cli.Context) error {
+	table := c.Args().Get(0)
+	source := c.Args().Get(1)
+
+	schema, err := NewSchemaLoader().load(c.Args().Get(2))
+	if err != nil {
+		logrus.New().Error(err)
+		return cli.NewExitError("Loading schema failed.", 1)
+	}
+
+	partition := c.String("partitioning")
+
+	query := NewAthenaQueryBuilder().load(table, source, schema, partition)
+
+	aqr := NewAthenaQueryRunner()
+	err = aqr.run(query, c.String("bucket"), c.String("object_prefix"), 0)
+	if err != nil {
+		logrus.New().Error(err)
+		return cli.NewExitError("Query execution is failed.", 1)
+	}
+
+	return nil
+}
+
 func Query(c *cli.Context) error {
 	query := c.Args().First()
 

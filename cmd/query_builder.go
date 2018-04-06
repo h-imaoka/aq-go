@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 )
 
 type AthenaQueryBuilder struct {}
@@ -38,5 +39,24 @@ func (a AthenaQueryBuilder) rm(database string, table string) string {
 	} else {
 		query = "DROP TABLE IF EXISTS " + database + "." + table
 	}
+	return query
+}
+
+func (a AthenaQueryBuilder) load(table string, source string, schema *Schema, patition string) string {
+	serde := "org.apache.hive.hcatalog.data.JsonSerDe"
+
+	var patitionState string
+	if patition == "" {
+		patitionState = ""
+	} else {
+		patitionState = "PARTITIONED BY (" + strings.Replace(patition,":", " ", -1) + ")"
+	}
+
+	query := "CREATE EXTERNAL TABLE IF NOT EXISTS "  + table +
+		" (" + schema.toString() + ") " +
+		patitionState +
+		" ROW FORMAT SERDE '" + serde + "'" +
+		" LOCATION '" + source + "'"
+
 	return query
 }

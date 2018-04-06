@@ -147,6 +147,38 @@ var Commands = []cli.Command{
 			return nil
 		},
 	},
+	{
+		Name:   "load",
+		Usage:  "Create table and load data",
+		Action: cmd.Load,
+		ArgsUsage:   "DATABASE.TABLE SOURCE SCHEMA",
+		Flags: []cli.Flag{
+			BucketFlag,
+			ObjectPrefixFlag,
+			cli.StringFlag{
+				Name: "source_format, s",
+				Value: "NEWLINE_DELIMITED_JSON",
+				Usage: "Specify source file data format. Now aq support only NEWLINE_DELIMITED_JSON.",
+			},
+			cli.StringFlag{
+				Name: "partitioning, p",
+				Value: "",
+				Usage: "Specify partition key and type. ex. key1:type1,key2:type2,...",
+			},
+		},
+		Before: func(c *cli.Context) error {
+			if c.String("bucket") == "" {
+				return cli.NewExitError("bucket must be specified.", 1)
+			}
+			if !strings.HasPrefix(c.Args().Get(1), "s3://") {
+				return cli.NewExitError("`SOURCE` must start with 's3://'", 1)
+			}
+			if c.String("source_format") != "NEWLINE_DELIMITED_JSON" {
+				return cli.NewExitError("Now aq support only NEWLINE_DELIMITED_JSON.", 1)
+			}
+			return nil
+		},
+	},
 }
 
 func Run() int {
