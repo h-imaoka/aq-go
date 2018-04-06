@@ -1,0 +1,5 @@
+[
+  {"name": "str0", "type": "string", "mode": "required"},
+  {"name": "str1", "type": "string", "mode": "nullable"},
+  {"name": "str2", "type": "string"}
+]
